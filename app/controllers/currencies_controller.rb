@@ -20,4 +20,14 @@ class CurrenciesController < ApplicationController
 
     render({ :template => "currency_templates/from_currency.html.erb" })
   end
+
+  def conversion
+    @from_sym = params["from_symbol"]
+    @to_sym = params["to_symbol"]
+
+    @raw_data = open("https://api.exchangerate.host/convert?from=#{@from_sym}&to=#{@to_sym}").read
+    @parsed_data = JSON.parse(@raw_data)
+    @exchange_rate = @parsed_data["info"]["rate"].to_f
+    render({ :template => "currency_templates/conversion.html.erb" })
+  end
 end
